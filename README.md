@@ -13,17 +13,3 @@ Kategori sınıflandırma problemi için ilk adım olarak preprocessing işlemle
 - metinlerde geçen geçersiz ve artık ifadeleri (”, “ gibi)
 - bu işlemlerden sonra oluşan çoklu-boşukları (multi-spaces)
 
-Daha sonra fikir vermesi açısından base-modeller oluşturarak ilk sonuçlara baktık. 
-
-modelling.py içindeki işlemler uygulandıktan sonra şu sonuçları alıyoruz:
-
-### <b>1. Basit LinearSVC modeli:</b>
-
-<img src="images/linearsvc.jpg" alt="Basic LinearSVC" height="300" width="453"/>
-
-
-### <b>2. FastText:</b>
-
-- train accuracy : 0.9459704195593118,
-- validation accuracy : 0.9348612786489746
-
