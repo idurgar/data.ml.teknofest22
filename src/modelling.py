@@ -41,9 +41,8 @@ class BiLSTM_Model:
 		no_classes = len(np.unique(dataset.test_labels))
 		# create model
 		inputs = Input(shape=(max_len, ))
-		embed = Embedding(embedding_matrix.shape[0], dim, weights=[embedding_matrix], input_length=max_len, trainable=False, mask_zero=False)(inputs) # mask_zero=True
+		embed = Embedding(embedding_matrix.shape[0], dim, weights=[embedding_matrix], input_length=max_len, trainable=False, mask_zero=False)(inputs)
 		x = Bidirectional(LSTM(dim,  return_sequences=True, unit_forget_bias=True))(embed)
-		#attention = TimeDistributed(Dense(1, activation='tanh'))(x)
 		attention = Dense(1, activation='tanh')(x)
 		attention = Flatten()(attention)
 		attention = Activation('softmax')(attention)
