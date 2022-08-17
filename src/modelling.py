@@ -98,7 +98,7 @@ class BiLSTM_Model:
 		print('Finished!')
 		print(f'Test time: {time.time()-start_time}')
   
-	def prediction(self, dataset, text_list):
+	def predict_custom(self, dataset, text_list):
 
 		tokenized = []
 		for text in text_list:

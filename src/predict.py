@@ -8,6 +8,7 @@ from .modelling import *
 from dateutil.parser import parse
 import datetime
 from .text_preprocessing import preprocessing
+
 def predict(model, word_index, max_len, text):
 	tokenized = []
 	padded_s = [0 for i in range(max_len)]
