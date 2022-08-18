@@ -2,6 +2,7 @@
 
 Belirlenen bu görevde; sınıflandırma, künye çıkarımı ve metin/bölüm analizi ile metni verilen bir içeriğin kategorisinin, buna bağlı detayları verilmiş üst verileri ve ilgili kategoriler için "madde sayısı"nın tespiti hedeflenmektedir.
 
+<b>Note: Except for the main data set of the competition, no data set was used.</b>
 
 ## Quickstart 
 
