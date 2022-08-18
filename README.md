@@ -15,11 +15,24 @@ For Turkish Word2vec pretrained model, you need to go to <a href="https://drive.
 
 If you want to train using notebooks, use <a href="https://github.com/idurgar/data.ml.teknofest22/blob/master/notebooks/classification.ipynb">this link</a>
 
-Otherwise use run.py
+```python
+
+import pandas as pd
+from gensim.models import KeyedVectors
+from text_preprocessing import preprocessing
+
+df = pd.read_csv(data_path)
+word_vectors = KeyedVectors.load_word2vec_format(word_vectors_path, binary=True)
+
+df["data_text"] = df["data_text"].apply(preprocessing)
 
 ```
-CUDA_VISIBLE_DEVICES=0       # gpu/device id: for specific GPUs
-python run.py   # to run in the background
+
+Otherwise use run.py
+
+```bash
+  CUDA_VISIBLE_DEVICES=0    # gpu/device id: for specific GPUs
+  python run.py
 --data_path ~/csv_data_path
 --w2v_path ~/word2vec_path/
 --chunk_size 100     
