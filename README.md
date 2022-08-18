@@ -16,7 +16,7 @@ For Turkish Word2vec pretrained model, you need to go to <a href="https://drive.
 If you want to train using notebooks, use <a href="https://github.com/idurgar/data.ml.teknofest22/blob/master/notebooks/classification.ipynb">this link</a>
 
 ```python
-
+# load data, word2vec and preprocessing text
 import pandas as pd
 from gensim.models import KeyedVectors
 from text_preprocessing import preprocessing
@@ -26,6 +26,38 @@ word_vectors = KeyedVectors.load_word2vec_format(word_vectors_path, binary=True)
 
 df["data_text"] = df["data_text"].apply(preprocessing)
 
+```
+
+```python
+# prepare dataset objects using DeepDataset
+from dataset import DeepDataset
+
+CHUNK_SIZE = 300
+MAX_LEN = 1024
+
+dataset = DeepDataset(df, text_column="text", label_column="kategori", chunk_size=CHUNK_SIZE, word_vectors=word_vectors, max_len=MAX_LEN)
+dataset.prepare_data()
+
+```
+
+```python
+# training
+from modelling import BiLSTM_Model
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+
+CLASS_WEIGHTS = True
+EPOCHS = 10
+BATCH_SIZE = 256
+
+# create callbacks
+checkpoint = ModelCheckpoint(models_dir + "model_checkpoint.hdf5", monitor='val_accuracy', verbose=1, save_best_only=True, mode='max')
+earlystopping = EarlyStopping(monitor="val_accuracy", min_delta=0.001, patience=9, mode="max")
+
+callbacks = [checkpoint, earlystopping]
+
+# build model and start training
+model = BiLSTM_Model(epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks)
+model.train(dataset, class_weights=CLASS_WEIGHTS)
 ```
 
 Otherwise use run.py
