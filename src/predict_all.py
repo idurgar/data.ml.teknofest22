@@ -40,43 +40,47 @@ def predict_category(model, word_index, label_dict, max_len, text):
 		("kanun hük kar nin tarihi" in text):
 		prediction = "Kanun Hükmünde Kararname" 
 
-	elif (re.search("HAKKINDA CUMHURBAŞKANLIĞI KARARNAMESİ (Kararname Numarası: (\d+))", preprocessed_text)) or \
-			(re.search("DAİR CUMHURBAŞKANLIĞI KARARNAMESİ (Kararname Numarası: (\d+))", preprocessed_text)) or \
-			(re.search("İLİŞKİN CUMHURBAŞKANLIĞI KARARNAMESİ (Kararname Numarası: (\d+))", preprocessed_text)) or \
-			(re.search("İLİŞKİN CUMHURBAŞKANLIĞI KARARNAMESİ (Kararname Numarası : (\d+))", preprocessed_text)) or \
-			(re.search("İLİŞKİN CUMHURBAŞKANLIĞI KARARNAMESİ (Kararname Numarası:(\d+))", preprocessed_text)) or \
-			(re.search("Cumhurbaşkanlığı Kararnamesinin Sayısı : (\d+)", preprocessed_text)) or \
-			(re.search("Cumhurbaşkanlığı Kararnamesinin Sayısı: (\d+)", preprocessed_text)) or \
-			(re.search("Cumhurbaşkanlığı Kararnamesinin Sayısı :(\d+)", preprocessed_text)) or \
-			(re.search("Cumhurbaşkanlığı Kararnamesinin Sayısı:(\d+)", preprocessed_text)) or \
-			(re.search("HAKKINDA CUMHURBAŞKANLIĞI KARARNAMESİ", preprocessed_text)) or \
-			(re.search("DAİR CUMHURBAŞKANLIĞI KARARNAMESİ", preprocessed_text)) or \
-			(re.search("ilişkin cumhurbaşkanlığı kararnamesi kararname numarası", preprocessed_text)) or \
-			(re.search("hakkında cumhurbaşkanlığı kararnamesi kararname numarası", preprocessed_text)) or \
-			(re.search("dair cumhurbaşkanlığı kararnamesi kararname numarası", preprocessed_text)) or \
-			(re.search("hakkında cumhurbaşkanlığı kararnamesi", preprocessed_text)) or \
-			(re.search("cumhurbaşkanlığı kararnamesinin sayısı", preprocessed_text)) or \
-			(re.search("dair cumhurbaşkanlığı kararnamesi", preprocessed_text)):
-		prediction = "Cumhurbaşkanlığı Kararnamesi" 
+	#elif (re.search("HAKKINDA CUMHURBAŞKANLIĞI KARARNAMESİ (Kararname Numarası: (\d+))", preprocessed_text)) or \
+	#		(re.search("DAİR CUMHURBAŞKANLIĞI KARARNAMESİ (Kararname Numarası: (\d+))", preprocessed_text)) or \
+	#		(re.search("İLİŞKİN CUMHURBAŞKANLIĞI KARARNAMESİ (Kararname Numarası: (\d+))", preprocessed_text)) or \
+	#		(re.search("İLİŞKİN CUMHURBAŞKANLIĞI KARARNAMESİ (Kararname Numarası : (\d+))", preprocessed_text)) or \
+	#		(re.search("İLİŞKİN CUMHURBAŞKANLIĞI KARARNAMESİ (Kararname Numarası:(\d+))", preprocessed_text)) or \
+	#		(re.search("Cumhurbaşkanlığı Kararnamesinin Sayısı : (\d+)", preprocessed_text)) or \
+	#		(re.search("Cumhurbaşkanlığı Kararnamesinin Sayısı: (\d+)", preprocessed_text)) or \
+	#		(re.search("Cumhurbaşkanlığı Kararnamesinin Sayısı :(\d+)", preprocessed_text)) or \
+	#		(re.search("Cumhurbaşkanlığı Kararnamesinin Sayısı:(\d+)", preprocessed_text)) or \
+	#		(re.search("HAKKINDA CUMHURBAŞKANLIĞI KARARNAMESİ", preprocessed_text)) or \
+	#		(re.search("DAİR CUMHURBAŞKANLIĞI KARARNAMESİ", preprocessed_text)) or \
+	#		(re.search("ilişkin cumhurbaşkanlığı kararnamesi kararname numarası", preprocessed_text)) or \
+	#		(re.search("hakkında cumhurbaşkanlığı kararnamesi kararname numarası", preprocessed_text)) or \
+	#		(re.search("dair cumhurbaşkanlığı kararnamesi kararname numarası", preprocessed_text)) or \
+	#		(re.search("hakkında cumhurbaşkanlığı kararnamesi", preprocessed_text)) or \
+	#		(re.search("cumhurbaşkanlığı kararnamesinin sayısı", preprocessed_text)) or \
+	#		(re.search("dair cumhurbaşkanlığı kararnamesi", preprocessed_text)):
+	#	prediction = "Cumhurbaşkanlığı Kararnamesi" 
 
 	else:
 		model_prediction = predict(model, word_index, max_len, preprocessed_text)[0]
+  
 		if model_prediction == 0:
+			prediction = "Cumhurbaşkanlığı Kararnamesi"	
+ 
+		elif model_prediction == 1:
 			prediction = "Genelge"
 			
-		elif model_prediction == 1:
+		elif model_prediction == 2:
 			prediction = "Kanun"
 
-		elif model_prediction == 2:
+		elif model_prediction == 4:
 			prediction = "Komisyon Raporu"
 
-		elif model_prediction == 3:
+		elif model_prediction == 5:
 			prediction = "Resmi Gazete"
 			
-		elif model_prediction == 4:
+		elif model_prediction == 6:
 			prediction = "Tebliğ"
 	
-		elif model_prediction == 5:
+		elif model_prediction == 7:
 			if (re.search("BKK No:", text)) or \
 				(re.search("bkk no", text)) or \
 				(re.search("Bakanlar Kurulu Kararının Tarihi : (\d+)/(\d+)/(\d+), No : (\d+)/(\d+)", text)) or \
@@ -91,9 +95,12 @@ def predict_category(model, word_index, label_dict, max_len, text):
 			else:
 				prediction = "Yönetmelik"
 
-		elif model_prediction == 6:
-			prediction = "Yönetmelik"
-	
+		elif model_prediction == 8:
+			if re.findall("HAKKINDA TEBLİĞ|DAİR TEBLİĞ|TEBLİĞİ", text):
+				prediction = "Tebliğ"
+			else:    
+				prediction = "Yönetmelik"
+
 		else:
 			prediction = "Özelge"
 
@@ -663,31 +670,52 @@ def extract_genelge_info(text):
 			mevzuat_tarihi = np.NaN
 
 		#mevzuat_no(string): Genelge Numarası (boş değilse)
-		mev_no=re.search(r'(GENELGE\s[0-9]+\s|GENELGE\sNO:\s[0-9]+\/[0-9]+\s|GENELGE\sNO\s[0-9]+\/[0-9]+\s|Genelge\sNo:\s[0-9]+\/[0-9]+\s|GENELGE\sNO-\s[0-9]+\/[0-9]+\s|Genelge:\s[0-9]+\/[0-9]+\s|Genelge\sSayısı\s[0-9]+\/[0-9]+\s|Genelge\sNo\s:\s[0-9]+\/[0-9]+\s)([0-9]+\/[0-9]+|[0-9]{4})|(SIRA\sNO:\s|GENELGESİ\sSERİ\sNO\s:\s|GENELGE\s|SIRA\sNO\s:\s|SERİ\sNO:|SERİ\sNO\s|GENELGESİ\sSERİ\sNO:\s|SIRA\sNO:|GENELGE\sSERİ\sNO\s:\s|GENELESİ\sSERİ\sNO:\s|G\sE\sN\sE\sL\sG\sE\s|GENELGE\sNo:\s|Genelge\sNo:\s|Genelge\sNo:|GENELGE\s[•]\s|GENELGE\sNO:\s|Genelge\sNo\s:\s|Genelge\sSayısı\s|Genelge:\s|GENELGE\sNO-\s|GENELGE\sNO\s|GENELGE\sNO:|GENELGE\sNO\s:\s|Genelge\sNo\s:)([0-9]+\s\/\s[0-9]+|[0-9]+\/[0-9]+|[0-9]+-[0-9]+|[0-9]+\s–\s[0-9]+|[0-9]+\/\s[0-9]+|[0-9]+–[0-9]+|[0-9]+\s-\s[0-9]+|[0-9]+\s-[0-9]+|[0-9]+\s\/|[0-9]+[A-Z]\/\/\/[0-9]+|[0-9]{5}[.][0-9]+|[0-9]+\s!.l|[0-9]+\/\s[A-Z]+\'|[0-9]+\/\s[\/]|[0-9]+[A-Z][0-9]|[0-9]+-\s[0-9]+|[0-9]+\/[\^][0-9]+|[•]\s[0-9]+\/\s£,2|[0-9]+-\s[A-Z][.]|[0-9]+\/\s[\^]|[0-9]+-\s|[0-9]+\s)',text)
-		if mev_no: 
-			mevzuat_no=mev_no.group(2) or mev_no.group(4)
+		mevzuat_no=re.search(r'(GENELGE\s[0-9]+\s|GENELGE\sNO:\s[0-9]+\/[0-9]+\s|GENELGE\sNO\s[0-9]+\/[0-9]+\s|Genelge\sNo:\s[0-9]+\/[0-9]+\s|GENELGE\sNO-\s[0-9]+\/[0-9]+\s|Genelge:\s[0-9]+\/[0-9]+\s|Genelge\sSayısı\s[0-9]+\/[0-9]+\s|Genelge\sNo\s:\s[0-9]+\/[0-9]+\s)([0-9]+\/[0-9]+|[0-9]{4})|(SIRA\sNO:\s|GENELGESİ\sSERİ\sNO\s:\s|GENELGE\s|SIRA\sNO\s:\s|SERİ\sNO:|SERİ\sNO\s|GENELGESİ\sSERİ\sNO:\s|SIRA\sNO:|GENELGE\sSERİ\sNO\s:\s|GENELESİ\sSERİ\sNO:\s|G\sE\sN\sE\sL\sG\sE\s|GENELGE\sNo:\s|Genelge\sNo:\s|Genelge\sNo:|GENELGE\s[•]\s|GENELGE\sNO:\s|Genelge\sNo\s:\s|Genelge\sSayısı\s|Genelge:\s|GENELGE\sNO-\s|GENELGE\sNO\s|GENELGE\sNO:|GENELGE\sNO\s:\s|Genelge\sNo\s:)([0-9]+-\sH|[0-9]+\s\/\s[0-9a-z]+|[0-9]+\s\/\s[0-9]+|[0-9]+\/[0-9]+|[0-9]+-[0-9]+|[0-9]+\s–\s[0-9]+|[0-9]+\/\s[0-9]+|[0-9]+–[0-9]+|[0-9]+\s-\s[0-9]+|[0-9]+\s-[0-9]+|[0-9]+\s\/|[0-9]+[A-Z]\/\/\/[0-9]+|[0-9]{5}[.][0-9]+|[0-9]+\s!.l|[0-9]+\/\s[A-Z]+\'|[0-9]+\/\s[\/]|[0-9]+[A-Z][0-9]|[0-9]+-\s[0-9]+|[0-9]+\/[\^][0-9]+|[•]\s[0-9]+\/\s£,2|[0-9]+-\s[A-Z][.]|[0-9]+\/\s[\^]|[0-9]+-\s|[0-9]+\s)',text)
+		if mevzuat_no: 
+			mevzuat_no=mevzuat_no.group(2) or mevzuat_no.group(4) 
+
 			if '' in mevzuat_no:
-				mevzuat_no = mevzuat_no.strip()
-				find = {'2015- ':'2015/11','2015/^':'2015/9','2015-A.':'2015-01','2014/^0':'2014/30','•2014/£,2':'2014/22','2014//':'2014/11',
-						'2013/JS':'2013/35','2012!.l':'2012/26','3D///30':'2011/30','2010/ ':'2010/17','2017U2':'2017/12','1998/47504':'1998/5'}
+				mevzuat_no=mevzuat_no.replace(" ",'')
+
+			find = {'2015- ':'2015/11','2015/^':'2015/9','2015-A.':'2015-01','2014/^0':'2014/30','•2014/£,2':'2014/22','2014//':'2014/11','H':'11',
+				'2013/JS':'2013/35','2012!.l':'2012/26','3D///30':'2011/30','2010/ ':'2010/17','2017U2':'2017/12','1998/47504':'1998/5','2015/2j3':'2015/28','20127.15':'2017.15'}
+			for key, value in find.items():
 				for key, value in find.items():
-					mevzuat_no = mevzuat_no.replace(key, value)
-	
+					if key in mevzuat_no:
+						mevzuat_no = mevzuat_no.replace(key, value)
+		
+			if '.' in mevzuat_no:
+				mevzuat_no=mevzuat_no.replace(".",'/')
+			if '–' in mevzuat_no:
+				mevzuat_no=mevzuat_no.replace("–",'/')
+			if '-'in mevzuat_no:
+				mevzuat_no=mevzuat_no.replace("-",'/')
+   
 		elif re.search(r'([0-9]+\/[0-9]+|[0-9]+)(\sSayılı"|\sSayılı\s.*Konulu\sGenelge|\sSAYILI\sGENELGE)',text):
-			mevzuat_no = re.search(r'([0-9]+\/[0-9]+|[0-9]+)(\sSayılı"|\sSayılı\s.*Konulu\sGenelge|\sSAYILI\sGENELGE)',text).group(1)
+			mevzuat_no=re.search(r'([0-9]+\/[0-9]+|[0-9]+)(\sSayılı"|\sSayılı\s.*Konulu\sGenelge|\sSAYILI\sGENELGE)',text).group(1)
 			if '' in mevzuat_no:
-				mevzuat_no = mevzuat_no.strip()
-				find = {'2015- ':'2015/11','2015/^':'2015/9','2015-A.':'2015-01','2014/^0':'2014/30','•2014/£,2':'2014/22','2014//':'2014/11',
-						'2013/JS':'2013/35','2012!.l':'2012/26','3D///30':'2011/30','2010/ ':'2010/17','2017U2':'2017/12','1998/47504':'1998/5'}
+				mevzuat_no=mevzuat_no.replace(" ",'')
+			
+			find = {'2015- ':'2015/11','2015/^':'2015/9','2015-A.':'2015-01','2014/^0':'2014/30','•2014/£,2':'2014/22','2014//':'2014/11','H':'11',
+				'2013/JS':'2013/35','2012!.l':'2012/26','3D///30':'2011/30','2010/ ':'2010/17','2017U2':'2017/12','1998/47504':'1998/5','2015/2j3':'2015/28','20127.15':'2017.15'}
+			for key, value in find.items():
 				for key, value in find.items():
-					mevzuat_no = mevzuat_no.replace(key, value)
+					if key in mevzuat_no:
+						mevzuat_no = mevzuat_no.replace(key, value)
+		
+			if '.' in mevzuat_no:
+				mevzuat_no=mevzuat_no.replace(".",'/')
+			if '–' in mevzuat_no:
+				mevzuat_no=mevzuat_no.replace("–",'/')
+			if '-'in mevzuat_no:
+				mevzuat_no=mevzuat_no.replace("-",'/')
+    
 		else:
 			mevzuat_no = np.NaN
 	
-
-		belge=re.search(r'(Sayı\s:\s|SAYI\s:\s|Sayı\s:\s|SAYI\s:|SAYI:\s|Sayı\s)((B.[0-9]+[0-9]+.[0-9]+.[A-Zİ]+.[0-9]+.|VUK|B.[0-9]+.[0-9]+.[0-9]+.[A-Zİ]+.[0-9]+.)([0-9]+-[0-9]+-[0-9]+\/[0-9]+|[0-9]+.[0-9]+\/[0-9]+-\s[0-9]+\/[0-9]+|[0-9]+\/[0-9]+-[0-9]+-[0-9]+|[0-9]+.[0-9]+-[0-9]+\[[0-9]+-\s[0-9]+\]-[0-9]+|[0-9]+\/[0-9]+-[0-9]+\s\/[0-9]+|[0-9]+-[0-9]+-[0-9]+\/[0-9]+|[0-9]+\/[0-9]+-\s[0-9]+\/[0-9]+|[0-9]+\/[0-9]+-[0-9]+\s\/\s[0-9]+|[0-9]+\/[0-9]+-[0-9]+|[.][0-9]+\/[0-9]+-[0-9]+\/[0-9]+|[0-9]+.[0-9]+-[0-9]+-[0-9]+.[0-9]+-[0-9]+|[0-9]+.[0-9]+\/[0-9]+-[0-9]+\/[0-9]+-[0-9]+|[0-9]+-[0-9]+.[0-9]+\/[0-9]+|[0-9]+\/[0-9]+.[0-9]+\/[0-9]+-[0-9]+|[0-9]+.[0-9]+\/[0-9]+-[0-9]+-[0-9]+|[0-9]+.[0-9]+\/[0-9]+-[0-9]+|[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+\[[0-9]+\]\/[0-9]+|\s[0-9]+\/[0-9]+-[0-9]+\/[0-9]+)|[0-9]+\/[0-9]+\/[0-9]+\/[0-9]+|[0-9]+[.][0-9][A-Za-z][A-Z][.][A-Z]+[0-9]+[.][A-Z0-9]+\/[a-z]+)|([0-9]+-[0-9]+-[0-9]+\/[0-9]+\/[0-9]+\s)(Sayılı\s.+Genelgesi)',text)
-		if belge:
-			belge_sayi = belge.group(2)
+		belge_sayi=re.search(r'(Sayı\s:\s|SAYI\s:\s|Sayı\s:\s|SAYI\s:|SAYI:\s|Sayı\s|SAYI:|Sayı\s|Sayı\s:|Sayı:|Sayı:\s|Sayı\s:|Sayi\s:\s|SAYI:\s|Sayı\sU\s)((B.[0-9]+[0-9]+.[0-9]+.[A-Zİ]+.[0-9]+.|VUK|B.[0-9]+.[0-9]+.[0-9]+.[A-Zİ]+.[0-9]+.|B.\s[0-9]+.[0-9]+.[A-Z]+.[0-9]+.|B.[0-9]+.[A-Z]+.|VRS\/|GEL:|VRS:|Bl\s[A-ZŞ]+-[0-9]+-[A-Z]+-[A-Z]+\s|BİAŞ-[0-9]+-[A-Z]+-[0-9]+.|BÎAŞ-[0-9]+-[A-Z]+-[0-9]+.|B[0-9]+.[0-9]+.|B.[0-9]+.[a-zA-Z]+.|B.\s[0-9]+.\s[0-9]+.\s|[0-9]+-|[0-9]+|E-[0-9]+-)([0-9]+.[0-9]+.[0-9]+.[0-9]+\/\s[0-9]+|[0-9]+.[0-9]+.[0-9]+\/\s[0-9]+|[0-9]+.[0-9]+.[0-9]+-[A-Z].[0-9]+|\/[0-9]+-[0-9]+\/[0-9]+|[0-9]+.[0-9]+.[0-9]+-[A-Za-z]+.\s[0-9]+|\/\s[0-9]+|[A-ZİÇŞÜa-z0-9]+-\/[0-9]+-|[0-9]+.[0-9]+\s-[0-9]+|[0-9]+.[0-9]+-\s[0-9]+|[0-9]+.[0-9]+.[0-9]+-[0-9]+|[0-9]+-[0-9]+-[0-9]+\/[0-9]+|[0-9]+.[0-9]+\/[0-9]+-\s[0-9]+\/[0-9]+|[0-9]+\/[0-9]+-[0-9]+-[0-9]+|[0-9]+.[0-9]+-[0-9]+\[[0-9]+-\s[0-9]+\]-[0-9]+|[0-9]+\/[0-9]+-[0-9]+\s\/[0-9]+|[0-9]+-[0-9]+-[0-9]+\/[0-9]+|[0-9]+\/[0-9]+-\s[0-9]+\/[0-9]+|[0-9]+\/[0-9]+-[0-9]+\s\/\s[0-9]+|[0-9]+\/[0-9]+-[0-9]+|[.][0-9]+\/[0-9]+-[0-9]+\/[0-9]+|[0-9]+.[0-9]+-[0-9]+-[0-9]+.[0-9]+-[0-9]+|[0-9]+.[0-9]+\/[0-9]+-[0-9]+\/[0-9]+-[0-9]+|[0-9]+-[0-9]+.[0-9]+\/[0-9]+|[0-9]+\/[0-9]+.[0-9]+\/[0-9]+-[0-9]+|[0-9]+.[0-9]+\/[0-9]+-[0-9]+-[0-9]+|[0-9]+.[0-9]+\/[0-9]+-[0-9]+|[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+\[[0-9]+\]\/[0-9]+|\s[0-9]+\/[0-9]+-[0-9]+\/[0-9]+|[0-9]+.[0-9]+.[0-9]+\/[0-9]+|[0-9]+.[0-9]+.[0-9]+\/[A-Z]+-[0-9]+-[0-9]+|[0-9]+.[0-9]+-[0-9]+\[[0-9]+-[0-9]+\]|[0-9]+.[0-9]+\/[0-9]+-|[0-9]+\/[0-9]+-[A-Za-z]+.[A-Za-z]+.[0-9]+-[0-9]+|[0-9]+\/[0-9]+-|[0-9]+.[0-9]+-[0-9]+.[0-9]+.[0-9]+|[0-9]+\/[0-9]+|[0-9]+.[0-9]+.[0-9]+-|[0-9]+\s[0-9]+.[0-9]+.[0-9]+\s-[0-9]+|[A-ZİÇŞÜ0-9]+-[0-9]+\/\s[0-9]+-[0-9]+-\([0-9]+\)|[0-9]+.[0-9]+.[0-9]+|.[0-9]+.[0-9]+.[0-9]+\/[0-9]+)|[0-9]+\/[0-9]+\/[0-9]+\/[0-9]+|[0-9]+[.][0-9][A-Za-z][A-Z][.][A-Z]+[0-9]+[.][A-Z0-9]+\/[a-z]+|[0-9]+.[0-9]+.[0-9]+\/[0-9]+)|([0-9]+-[0-9]+-[0-9]+\/[0-9]+\/[0-9]+\s)(Sayılı\s.+Genelgesi)',text)
+		if belge_sayi:
+			belge_sayi=belge_sayi.group(2) or belge_sayi.group(5)
 		else: belge_sayi = np.NaN
 
 	except:
