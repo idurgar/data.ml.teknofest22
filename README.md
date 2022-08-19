@@ -6,6 +6,13 @@ Belirlenen bu görevde; sınıflandırma, künye çıkarımı ve metin/bölüm a
 
 ## Quickstart 
 
+### Requirements
+We used this packages:
+- python3.9
+- tensorflow-gpu 2.6.0
+- keras 2.6.0
+- gensim 4.2.0
+
 ### Training
 
 For Turkish Word2vec pretrained model, you need to go to <a href="https://drive.google.com/drive/folders/1IBMTAGtZ4DakSCyAoA4j7Ch0Ft1aFoww">this address</a> and download it
@@ -75,7 +82,7 @@ If you want to test using notebooks, use <a href="https://github.com/idurgar/dat
 
 ```python
 # testing 
-kategori_pred
+
 from predict_all import *
 
 # predict kategori using model or regex; details are in src/predict_all.py
@@ -102,4 +109,14 @@ rega_no, mukerrer_no, rega_tarihi, madde_sayisi = extract_yonetmelik_info(text)
 #if kategori is "Özelge"
 mevzuat_tarihi = extract_ozelge_info(text)
 
+```
+or run test.py
+
+```bash
+  CUDA_VISIBLE_DEVICES=0  # gpu/device id: for specific GPUs
+  python3 run.py
+--model_path              # ~/models/model.hdf5
+--data_path               # ~/word2vec_path
+--word_index_path         # data/word_index.pkl     
+--label_dict_path         # data/label_dict.pkl 
 ```

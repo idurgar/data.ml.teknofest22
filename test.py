@@ -23,25 +23,19 @@ outputs_dir = models_dir = os.path.join(main_dir, "outputs/")
 
 def predict(model_path, data_path, word_index_path, label_dict_path):
 
-	# load data, model, word_index and label_dict
-	df = pd.read_csv(data_path)
-
-	model = load_model(model_path)
-	word_index = pickle.load(open(word_index_path, "rb"))
-	label_dict = pickle.load(open(label_dict_path, "rb"))
- 
 	# dataframe for results
-	results_df = pd.DataFrame(columns=["data_text", "id", "rega_no", "mukerrer_no", "rega_tarihi", "mevzuat_no", "belge_sayi", "mevzuat_tarihi", "donem", "sira_no", "madde_sayisi"])
+	results_df = pd.DataFrame(columns=["data_text", "kategori", "rega_no", "mukerrer_no", "rega_tarihi", "mevzuat_no", "belge_sayi", "mevzuat_tarihi", "donem", "sira_no", "madde_sayisi", "kurum"])
 	results_df.loc[0, "mukerrer_no"] = 0
 	results_df.loc[0, "madde_sayisi"] = 0
+	results_df.loc[0, "kurum"] = np.NaN
 
 	for i, text in enumerate(tqdm(df.data_text.values)):
 		results_df.loc[i, "data_text"] = text
 		kategori_prediction = predict_category(model, word_index, label_dict, 64, text)
-		results_df.loc[i, "id"] = kategori_prediction
+		results_df.loc[i, "kategori"] = kategori_prediction
 		
 		if kategori_prediction == "Kanun Hükmünde Kararname":
-			rega_no, mukerrer_no, rega_tarihi, mevzuat_no, mevzuat_tarihi, madde_sayisi = extract_kanun_hükmünde_kararname_info(text)
+			rega_no, mukerrer_no, rega_tarihi, mevzuat_no, mevzuat_tarihi, madde_sayisi = extract_kanun_hukmunde_kararname_info(text)
 			results_df.loc[i, "rega_no"] = rega_no
 			results_df.loc[i, "mukerrer_no"] = mukerrer_no
 			results_df.loc[i, "rega_tarihi"] = rega_tarihi
@@ -83,6 +77,12 @@ def predict(model_path, data_path, word_index_path, label_dict_path):
 			results_df.loc[i, "rega_no"] = rega_no
 			results_df.loc[i, "mukerrer_no"] = mukerrer_no
 			results_df.loc[i, "rega_tarihi"] = rega_tarihi
+		
+		if kategori_prediction == "Yönetmelik":
+			rega_no, mukerrer_no, rega_tarihi = extract_teblig_info(text)
+			results_df.loc[i, "rega_no"] = rega_no
+			results_df.loc[i, "mukerrer_no"] = mukerrer_no
+			results_df.loc[i, "rega_tarihi"] = rega_tarihi
 			
 		if kategori_prediction == "Tebliğ":
 			rega_no, mukerrer_no, rega_tarihi = extract_teblig_info(text)
@@ -98,18 +98,14 @@ def predict(model_path, data_path, word_index_path, label_dict_path):
 			results_df.loc[i, "mevzuat_no"] = mevzuat_no
 			results_df.loc[i, "rega_tarihi"] = rega_tarihi
 			results_df.loc[i, "mevzuat_tarihi"] = mevzuat_tarihi
-			results_df.loc[i, "madde_sayisi"] = madde_sayisi
-			
-		if kategori_prediction == "Yönetmelik":
-			rega_no, mukerrer_no, rega_tarihi, madde_sayisi = extract_yonetmelik_info(text)
-			results_df.loc[i, "rega_no"] = rega_no
-			results_df.loc[i, "mukerrer_no"] = mukerrer_no                        
-			results_df.loc[i, "rega_tarihi"] = rega_tarihi    
-			results_df.loc[i, "madde_sayisi"] = madde_sayisi    
+			results_df.loc[i, "madde_sayisi"] = madde_sayisi  
 			
 		if kategori_prediction == "Özelge":
 			mevzuat_tarihi = extract_ozelge_info(text)
 			results_df.loc[i, "mevzuat_tarihi"] = mevzuat_tarihi
+        
+	results_df.madde_sayisi = results_df.madde_sayisi.fillna(0)
+	results_df.mukerrer_no = results_df.mukerrer_no.fillna(0)    
 
 	results_df.to_csv(outputs_dir + "ornek-eval-dataset.csv", index=None)
 
