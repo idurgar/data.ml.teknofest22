@@ -7,7 +7,7 @@ Belirlenen bu görevde; sınıflandırma, künye çıkarımı ve metin/bölüm a
 ## Quickstart 
 
 ### Requirements
-We used this packages:
+We used these packages:
 - python3.9
 - tensorflow-gpu 2.6.0
 - keras 2.6.0
@@ -36,8 +36,9 @@ df["data_text"] = df["data_text"].apply(preprocessing)
 # prepare dataset objects using DeepDataset
 from dataset import DeepDataset
 
+# We got the best model performance with max_len=64, chunk_size = 300 (if chunk_size>max_len, it will be invalid) and class_weights=True
 CHUNK_SIZE = 300
-MAX_LEN = 1024
+MAX_LEN = 64
 
 dataset = DeepDataset(df, text_column="data_text", label_column="kategori", chunk_size=CHUNK_SIZE, word_vectors=word_vectors, max_len=MAX_LEN)
 dataset.prepare_data()
@@ -63,7 +64,7 @@ model = BiLSTM_Model(epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks)
 model.train(dataset, class_weights=CLASS_WEIGHTS)
 ```
 
-Otherwise use run.py
+Otherwise you can use run.py
 
 ```bash
   CUDA_VISIBLE_DEVICES=0    # gpu/device id: for specific GPUs
@@ -71,14 +72,14 @@ Otherwise use run.py
 --data_path ~/csv_data_path
 --w2v_path ~/word2vec_path
 --chunk_size 300     
---max_len 1024   
+--max_len 64   
 --epochs 80   
 --batch_size 256
 ```
 
 ### Testing
 
-If you want to test using notebooks, use <a href="https://github.com/idurgar/data.ml.teknofest22/blob/master/notebooks/prediction.ipynb">this link</a>
+If you want to test using notebooks, you can use <a href="https://github.com/idurgar/data.ml.teknofest22/blob/master/notebooks/prediction.ipynb">this link</a>
 
 ```python
 # testing 
@@ -110,7 +111,7 @@ rega_no, mukerrer_no, rega_tarihi, madde_sayisi = extract_yonetmelik_info(text)
 mevzuat_tarihi = extract_ozelge_info(text)
 
 ```
-or run test.py
+or you can run test.py
 
 ```bash
   CUDA_VISIBLE_DEVICES=0  # gpu/device id: for specific GPUs
