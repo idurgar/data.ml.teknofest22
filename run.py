@@ -14,7 +14,7 @@ import sys, os
 import warnings
 warnings.filterwarnings("ignore")
 
-source_path = (os.path.abspath(os.path.join(os.path.dirname("__file__"), '..'))+ "/teknofest_nlp"+ '/src/')
+source_path = (os.path.abspath(os.path.join(os.path.dirname("__file__"), '..'))+ "/data.ml.teknofest22"+ '/src/')
 sys.path.append(source_path)
 
 from modelling import BiLSTM_Model
