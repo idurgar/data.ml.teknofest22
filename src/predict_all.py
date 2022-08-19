@@ -96,7 +96,7 @@ def predict_category(model, word_index, label_dict, max_len, text):
 				prediction = "Yönetmelik"
 
 		elif model_prediction == 6:
-			if re.findall("HAKKINDA TEBLİĞ|DAİR TEBLİĞ|TEBLİĞİ", text):
+			if re.findall("HAKKINDA TEBLİĞ|DAİR TEBLİĞ|TEBLİĞİ|İLİŞKİN TEBLİĞ|TEBLİĞ", text):
 				prediction = "Tebliğ"
 			else:    
 				prediction = "Yönetmelik"
