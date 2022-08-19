@@ -104,8 +104,14 @@ def predict(model_path, data_path, word_index_path, label_dict_path):
 			mevzuat_tarihi = extract_ozelge_info(text)
 			results_df.loc[i, "mevzuat_tarihi"] = mevzuat_tarihi
         
-	results_df.madde_sayisi = results_df.madde_sayisi.fillna(0)
-	results_df.mukerrer_no = results_df.mukerrer_no.fillna(0)    
+	try:
+    results_df.mukerrer_no = results_df.mukerrer_no.astype(int)
+	except:
+		pass    
+	try:
+		results_df.madde_sayisi = results_df.madde_sayisi.astype(int)
+	except: 
+		pass    
 
 	results_df.to_csv(outputs_dir + "ornek-eval-dataset.csv", index=None)
 
